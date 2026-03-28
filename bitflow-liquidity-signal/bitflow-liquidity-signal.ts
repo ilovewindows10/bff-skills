@@ -259,13 +259,13 @@ program
   .description('Fetch and analyze current Bitflow pool liquidity signals')
   .option('--top <n>', 'Number of top pools to show', '10')
   .option('--min-liquidity <usd>', 'Minimum pool liquidity in USD', String(MIN_LIQUIDITY_USD))
-  .option('--json', 'Output as JSON', false)
+  .option('--pretty', 'Output human-readable format instead of JSON', false)
   .action(async (opts) => {
     try {
       await runSignal({
         top: parseInt(opts.top, 10),
         minLiquidity: parseFloat(opts.minLiquidity),
-        json: opts.json,
+        json: !opts.pretty,
       });
     } catch (err) {
       console.log(JSON.stringify({ error: err instanceof Error ? err.message : String(err) }));
