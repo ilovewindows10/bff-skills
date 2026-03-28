@@ -1,0 +1,13 @@
+{
+  "name": "bitflow-liquidity-signal",
+  "version": "1.0.0",
+  "description": "Bitflow DEX pool liquidity health signal for AIBTC agents",
+  "type": "module",
+  "dependencies": {
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^6.0.2"
+  }
+}
