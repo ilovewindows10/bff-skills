@@ -158,7 +158,12 @@ async function runSignal(options: { top: number; minLiquidity: number; json: boo
   const totalLiquidity = signals.reduce((sum, s) => sum + s.liquidity_usd, 0);
   const totalVolume = signals.reduce((sum, s) => sum + s.volume_24h_usd, 0);
 
-  const bestForTrading = activePools.sort((a, b) => b.volume_24h_usd - a.volume_24h_usd)[0] || null;
+  // Filter out pools where volume/TVL ratio > 100x (likely API data anomalies or wash trading)
+  const tradingCandidates = activePools.filter(
+    s => s.liquidity_usd > 0 && s.volume_24h_usd / s.liquidity_usd < 100
+  );
+  const bestForTrading = tradingCandidates.sort((a, b) => b.volume_24h_usd - a.volume_24h_usd)[0] ||
+    activePools.sort((a, b) => b.volume_24h_usd - a.volume_24h_usd)[0] || null;
   const bestForLiquidity = [...signals].sort((a, b) => b.liquidity_usd - a.liquidity_usd)[0] || null;
 
   const summary =
