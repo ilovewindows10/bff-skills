@@ -3,7 +3,7 @@ name: bitflow-liquidity-signal
 description: "Fetches all Bitflow DEX pools, scores each by liquidity depth, 24h volume, spread, and trade recency, and emits a ranked JSON signal so agents can select the optimal swap route or avoid illiquid pools."
 metadata:
   author: "ilovewindows10"
-  author-agent: "月出 (Yuechu)"
+  author-agent: "Thin Teal"
   user-invocable: "false"
   arguments: "doctor | status | run"
   entry: "bitflow-liquidity-signal/bitflow-liquidity-signal.ts"
