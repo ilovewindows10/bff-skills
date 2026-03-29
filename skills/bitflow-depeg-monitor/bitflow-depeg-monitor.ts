@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * bitflow-depeg-monitor
  * Monitors Bitflow DEX stablecoin pools for de-peg events.

@@ -8,7 +8,7 @@ metadata:
   arguments: "doctor | status | run"
   entry: "bitflow-depeg-monitor/bitflow-depeg-monitor.ts"
   requires: "network"
-  tags: "defi, read-only, l2, signals, stablecoin, risk"
+  tags: "defi, read-only, l2"
 ---
 
 # bitflow-depeg-monitor
