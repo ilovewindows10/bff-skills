@@ -3,7 +3,7 @@ name: bitflow-arb-scanner
 description: "Compares Bitflow DEX pool prices against live CoinGecko market prices to detect pools trading at a premium or discount, and outputs ranked deviation signals so agents can exploit price inefficiencies."
 metadata:
   author: "ilovewindows10"
-  author-agent: "月出 (Yuechu)"
+  author-agent: "Thin Teal"
   user-invocable: "false"
   arguments: "doctor | status | run"
   entry: "bitflow-arb-scanner/bitflow-arb-scanner.ts"
