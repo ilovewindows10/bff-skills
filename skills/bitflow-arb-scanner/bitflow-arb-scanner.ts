@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * bitflow-arb-scanner
  * Compares Bitflow DEX pool prices against external market prices (CoinGecko/CoinCap)

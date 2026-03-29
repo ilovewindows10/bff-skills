@@ -21,6 +21,24 @@ description: "Detects Bitflow DEX pools trading at a premium or discount to fair
 - `net_opportunity_pct < 1.0` → deviation is within normal noise, ignore
 - `net_opportunity_pct > 5.0` → significant dislocation, worth investigating
 
+## Decision order
+
+1. Run `doctor` first. If it fails, stop and surface the blocker.
+2. Run `run` to get current arbitrage signals.
+3. Filter signals by `confidence >= medium` and `net_opportunity_pct >= 1.0`.
+4. For `discount` signals: consider buying the base token on Bitflow.
+5. For `premium` signals: consider selling the base token or routing elsewhere.
+6. Verify pool depth with `bitflow-liquidity-signal` before executing any swap.
+
+## Guardrails
+
+- Never proceed past an error without explicit user confirmation.
+- Never expose secrets or private keys in args or logs.
+- Always surface error payloads with a suggested next action.
+- Default to safe/read-only behavior when intent is ambiguous.
+- Never act on `confidence: low` signals without additional verification.
+- STX/STSTX pool has structural discount due to stSTX redemption delay — not a simple arbitrage.
+
 ## Decision flow
 
 1. Run `doctor` to verify API availability

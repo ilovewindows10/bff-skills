@@ -8,7 +8,7 @@ metadata:
   arguments: "doctor | status | run"
   entry: "bitflow-arb-scanner/bitflow-arb-scanner.ts"
   requires: "network"
-  tags: "defi, read-only, l2, signals, arbitrage"
+  tags: "defi, read-only, l2"
 ---
 
 # bitflow-arb-scanner
