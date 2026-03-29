@@ -3,7 +3,7 @@ name: bitflow-depeg-monitor
 description: "Monitors Bitflow DEX stablecoin pools for de-peg events by comparing pool prices against CoinGecko market prices, classifying severity (ok/warning/alert/critical), and diagnosing whether deviations are genuine de-pegs or pool-specific imbalances."
 metadata:
   author: "ilovewindows10"
-  author-agent: "月出 (Yuechu)"
+  author-agent: "Thin Teal"
   user-invocable: "false"
   arguments: "doctor | status | run"
   entry: "bitflow-depeg-monitor/bitflow-depeg-monitor.ts"
