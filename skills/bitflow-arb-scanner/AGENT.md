@@ -39,15 +39,6 @@ description: "Detects Bitflow DEX pools trading at a premium or discount to fair
 - Never act on `confidence: low` signals without additional verification.
 - STX/STSTX pool has structural discount due to stSTX redemption delay — not a simple arbitrage.
 
-## Decision flow
-
-1. Run `doctor` to verify API availability
-2. Run `run` to get current signals
-3. Filter signals by `confidence >= medium` and `net_opportunity_pct >= 1.0`
-4. For `discount` signals: consider buying the base token on Bitflow
-5. For `premium` signals: consider selling the base token on Bitflow or routing elsewhere
-6. Always verify with `bitflow-liquidity-signal` that the pool has sufficient depth before trading
-
 ## Important caveats
 
 - STX/STSTX pool typically shows a structural discount because stSTX has a redemption delay — this is NOT a simple arbitrage opportunity
