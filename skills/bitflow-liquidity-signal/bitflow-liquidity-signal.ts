@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * bitflow-liquidity-signal
  * Analyzes Bitflow DEX pool liquidity health and ranks pools by depth,

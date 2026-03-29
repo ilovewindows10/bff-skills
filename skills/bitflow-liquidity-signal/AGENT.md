@@ -37,6 +37,19 @@ bun run bitflow-liquidity-signal/bitflow-liquidity-signal.ts doctor
 - `best_for_trading` = highest 24h volume pool (tightest market)
 - `best_for_liquidity` = highest TVL pool (lowest price impact for large swaps)
 
+## Decision order
+1. Run `doctor` first. If it fails, stop and surface the blocker.
+2. Run `run` to fetch the latest liquidity signal.
+3. Parse the JSON output and route on `health_score` and `status`.
+4. Use `best_for_trading` for time-sensitive swaps, `best_for_liquidity` for large orders.
+
+## Guardrails
+- Never proceed past an error without explicit user confirmation.
+- Never expose secrets or private keys in args or logs.
+- Always surface error payloads with a suggested next action.
+- Default to safe/read-only behavior when intent is ambiguous.
+- If `status: idle`, warn the user before using that pool for trading.
+
 ## Safety
 
 - Read-only: no transactions, no keys required

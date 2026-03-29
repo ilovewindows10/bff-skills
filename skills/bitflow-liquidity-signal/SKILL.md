@@ -8,7 +8,7 @@ metadata:
   arguments: "doctor | status | run"
   entry: "bitflow-liquidity-signal/bitflow-liquidity-signal.ts"
   requires: "network"
-  tags: "defi, read-only, l2, signals"
+  tags: "defi, read-only, l2"
 ---
 
 # bitflow-liquidity-signal
