@@ -45,16 +45,6 @@ description: "Monitors Bitflow stablecoin pools for de-peg events. Run before an
 - Stale pools (>120 min since trade) may show false deviations — check `warning` field.
 - Small deviations (< 0.1%) in stablecoin pools are normal — do not alert on these.
 
-## Decision flow
-
-1. Run `doctor` to verify APIs are available
-2. Run `run --min-severity warning` to get actionable signals
-3. If `critical_count > 0` AND diagnosis contains `GENUINE DE-PEG` → halt all stablecoin ops, alert user
-4. If `critical_count > 0` AND diagnosis contains `POOL IMBALANCE` → avoid that specific pool, others may be fine
-5. If `alert_count > 0` → reduce new stablecoin exposure, monitor every 5 minutes
-6. If `warning_count > 0` → proceed with caution, recheck before large trades
-7. If all `ok` → proceed normally
-
 ## Important caveats
 
 - Stale pools (last_trade_age_minutes > 120) may show false deviations — check the `warning` field
