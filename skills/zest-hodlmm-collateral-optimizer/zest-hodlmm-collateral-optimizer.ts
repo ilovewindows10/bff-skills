@@ -239,19 +239,25 @@ async function getZestPosition(address: string): Promise<ZestPosition> {
   } catch { /* no borrow */ }
 
   // Fetch sBTC price from Hiro
-  let sbtcPriceUsd = 85000;
+  let sbtcPriceUsd = 0;
   try {
     const priceData = await fetchJson<{ last_price?: string }>(
       `${HIRO_API}/extended/v1/tokens/ft/SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4::sbtc-token/price`
     );
     if (priceData.last_price) sbtcPriceUsd = parseFloat(priceData.last_price);
-    else {
-      // Fallback 2: Bitflow pools API tokenX price
+  } catch { /* try next source */ }
+  if (!sbtcPriceUsd) {
+    try {
+      // Fallback: Bitflow pools API tokenX price
       const poolsData = await fetchJson<{ data?: Array<{ poolId: string; tokens: { tokenX: { priceUsd: number } } }> }>(`${BITFLOW_API}/api/app/v1/pools`);
       const sbtcPool = poolsData.data?.find(p => p.tokens?.tokenX?.priceUsd && p.poolId.includes('sbtc'));
       if (sbtcPool) sbtcPriceUsd = sbtcPool.tokens.tokenX.priceUsd;
-    }
-  } catch { /* use fallback */ }
+    } catch { /* price unavailable */ }
+  }
+  if (!sbtcPriceUsd) {
+    blocked("PRICE_UNAVAILABLE", "Cannot fetch live sBTC price from any source — refusing to compute with stale data", "retry when Hiro API and Bitflow API are reachable");
+    return;
+  }
 
   const suppliedNum = Number(supplied);
   const borrowedNum = Number(borrowed);
