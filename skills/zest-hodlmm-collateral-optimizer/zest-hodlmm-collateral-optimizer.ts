@@ -291,7 +291,10 @@ async function getHodlmmPosition(address: string, poolId: string): Promise<Hodlm
     return liq > 0;
   }).length;
 
-  const estimatedPositionUsd = activeBins * (tvlUsd / 1000);
+  // NOTE: Bitflow bins API does not expose per-user position USD value.
+  // Estimation: user's active bins as proportion of assumed ~1000 total bins * pool TVL.
+  // This is a conservative approximation; actual value may differ.
+  const estimatedPositionUsd = tvlUsd > 0 && activeBins > 0 ? activeBins * (tvlUsd / 1000) : 0;
   const estimatedFeesUsd = estimatedPositionUsd * (apr24h / 100) / 365;
 
   return { poolId, activeBins, totalLiquidityUsd: estimatedPositionUsd, earnedFeesUsd: estimatedFeesUsd, apr24h };
@@ -350,7 +353,7 @@ async function cmdStatus(address: string, poolId: string): Promise<void> {
   try { zest = await getZestPosition(address); }
   catch (e) { fail("ZEST_FETCH_FAILED", `Failed to fetch Zest position: ${(e as Error).message}`, "retry"); return; }
   const hodlmm = await getHodlmmPosition(address, poolId);
-  success("status", { wallet: address, zest: { supplied_sats: zest.supplied, borrowed_sats: zest.borrowed, health_factor: parseFloat(zest.healthFactor.toFixed(4)), collateral_usd: parseFloat(zest.collateralUsd.toFixed(2)), borrowed_usd: parseFloat(zest.borrowedUsd.toFixed(2)) }, hodlmm: hodlmm ? { pool_id: hodlmm.poolId, active_bins: hodlmm.activeBins, estimated_position_usd: parseFloat(hodlmm.totalLiquidityUsd.toFixed(2)), estimated_daily_fees_usd: parseFloat(hodlmm.earnedFeesUsd.toFixed(4)), apr_24h_pct: parseFloat(hodlmm.apr24h.toFixed(2)) } : null });
+  success("status", { wallet: address, zest: { supplied_sats: zest.supplied, borrowed_sats: zest.borrowed, health_factor: parseFloat(zest.healthFactor.toFixed(4)), collateral_usd: parseFloat(zest.collateralUsd.toFixed(2)), borrowed_usd: parseFloat(zest.borrowedUsd.toFixed(2)) }, hodlmm: hodlmm ? { pool_id: hodlmm.poolId, active_bins: hodlmm.activeBins, estimated_position_usd: parseFloat(hodlmm.totalLiquidityUsd.toFixed(2)), position_estimated: true, estimated_daily_fees_usd: parseFloat(hodlmm.earnedFeesUsd.toFixed(4)), apr_24h_pct: parseFloat(hodlmm.apr24h.toFixed(2)) } : null });
 }
 
 async function cmdRun(address: string, poolId: string, safeHF: number, criticalHF: number): Promise<void> {
@@ -364,7 +367,7 @@ async function cmdRun(address: string, poolId: string, safeHF: number, criticalH
   catch (e) { fail("ZEST_FETCH_FAILED", `Failed to fetch Zest position: ${(e as Error).message}`, "retry"); return; }
   const hodlmm = await getHodlmmPosition(address, poolId);
   const signal = computeSignal(zest, hodlmm, safeHF, criticalHF);
-  success("run", { wallet: address, signal, zest: { supplied_sats: zest.supplied, borrowed_sats: zest.borrowed, health_factor: parseFloat(zest.healthFactor.toFixed(4)), collateral_usd: parseFloat(zest.collateralUsd.toFixed(2)), borrowed_usd: parseFloat(zest.borrowedUsd.toFixed(2)) }, hodlmm: hodlmm ? { pool_id: hodlmm.poolId, active_bins: hodlmm.activeBins, estimated_position_usd: parseFloat(hodlmm.totalLiquidityUsd.toFixed(2)), apr_24h_pct: parseFloat(hodlmm.apr24h.toFixed(2)) } : null, safety: { max_gas_stx: MAX_GAS_STX, cooldown_hours: COOLDOWN_HOURS, ltv_used: LTV, this_skill_does_not_write_to_chain: true } });
+  success("run", { wallet: address, signal, zest: { supplied_sats: zest.supplied, borrowed_sats: zest.borrowed, health_factor: parseFloat(zest.healthFactor.toFixed(4)), collateral_usd: parseFloat(zest.collateralUsd.toFixed(2)), borrowed_usd: parseFloat(zest.borrowedUsd.toFixed(2)) }, hodlmm: hodlmm ? { pool_id: hodlmm.poolId, active_bins: hodlmm.activeBins, estimated_position_usd: parseFloat(hodlmm.totalLiquidityUsd.toFixed(2)), position_estimated: true, apr_24h_pct: parseFloat(hodlmm.apr24h.toFixed(2)) } : null, safety: { max_gas_stx: MAX_GAS_STX, cooldown_hours: COOLDOWN_HOURS, ltv_used: LTV, this_skill_does_not_write_to_chain: true } });
 }
 
 // ── Main ───────────────────────────────────────────────────────────────────────
