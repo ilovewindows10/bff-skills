@@ -245,6 +245,12 @@ async function getZestPosition(address: string): Promise<ZestPosition> {
       `${HIRO_API}/extended/v1/tokens/ft/SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4::sbtc-token/price`
     );
     if (priceData.last_price) sbtcPriceUsd = parseFloat(priceData.last_price);
+    else {
+      // Fallback 2: Bitflow pools API tokenX price
+      const poolsData = await fetchJson<{ data?: Array<{ poolId: string; tokens: { tokenX: { priceUsd: number } } }> }>(`${BITFLOW_API}/api/app/v1/pools`);
+      const sbtcPool = poolsData.data?.find(p => p.tokens?.tokenX?.priceUsd && p.poolId.includes('sbtc'));
+      if (sbtcPool) sbtcPriceUsd = sbtcPool.tokens.tokenX.priceUsd;
+    }
   } catch { /* use fallback */ }
 
   const suppliedNum = Number(supplied);
