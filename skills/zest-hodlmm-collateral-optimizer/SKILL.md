@@ -27,7 +27,7 @@ Agents managing both Zest borrowing positions and Bitflow HODLMM LP positions fa
 - It does NOT move funds, modify positions, or interact with any contract write functions.
 - All outputs are signals only — execution is left to the operator or a downstream write skill.
 - Mainnet only: Zest V2 contracts and Bitflow HODLMM are only deployed on Stacks mainnet.
-- Health factor calculation uses an 80% LTV assumption (matching Zest V2 sBTC collateral factor).
+- Health factor calculation uses a 70% LTV (verified from Zest V2 `get-reserve-state` `base-ltv-as-collateral = 70000000`).
 - `--critical-hf` must be ≥ 1.05 to prevent dangerously close thresholds to liquidation (1.0).
 - `--critical-hf` must always be less than `--safe-hf`.
 

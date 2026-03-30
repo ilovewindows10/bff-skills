@@ -345,7 +345,7 @@ async function cmdDoctor(): Promise<void> {
 
 async function cmdStatus(address: string, poolId: string): Promise<void> {
   if (!address) { blocked("NO_WALLET", "--wallet <STX_ADDRESS> is required for status", "provide --wallet"); return; }
-  if (!address.startsWith("SP") && !address.startsWith("ST")) { blocked("INVALID_ADDRESS", `Address ${address} is not a valid Stacks address`, "provide a valid SP/ST address"); return; }
+  if (!address.startsWith("SP") && !address.startsWith("ST") || address.length < 33 || address.length > 41) { blocked("INVALID_ADDRESS", `Address ${address} is not a valid Stacks address (must start with SP/ST, length 33-41)`, "provide a valid SP/ST address"); return; }
   let zest: ZestPosition;
   try { zest = await getZestPosition(address); }
   catch (e) { fail("ZEST_FETCH_FAILED", `Failed to fetch Zest position: ${(e as Error).message}`, "retry"); return; }
@@ -355,7 +355,7 @@ async function cmdStatus(address: string, poolId: string): Promise<void> {
 
 async function cmdRun(address: string, poolId: string, safeHF: number, criticalHF: number): Promise<void> {
   if (!address) { blocked("NO_WALLET", "--wallet <STX_ADDRESS> is required", "provide --wallet"); return; }
-  if (!address.startsWith("SP") && !address.startsWith("ST")) { blocked("INVALID_ADDRESS", `Address ${address} is not a valid Stacks address`, "provide a valid SP/ST address"); return; }
+  if (!address.startsWith("SP") && !address.startsWith("ST") || address.length < 33 || address.length > 41) { blocked("INVALID_ADDRESS", `Address ${address} is not a valid Stacks address (must start with SP/ST, length 33-41)`, "provide a valid SP/ST address"); return; }
   if (safeHF > 3.0) { blocked("SAFE_HF_TOO_HIGH", `safe-hf ${safeHF} exceeds 3.0`, "lower --safe-hf to 3.0 or below"); return; }
   if (criticalHF >= safeHF) { blocked("INVALID_THRESHOLDS", `critical-hf (${criticalHF}) must be less than safe-hf (${safeHF})`, "fix --safe-hf and --critical-hf"); return; }
   if (criticalHF < 1.05) { blocked("HF_TOO_LOW", `critical-hf ${criticalHF} is dangerously close to liquidation (1.0). Minimum allowed: 1.05`, "increase --critical-hf to at least 1.05"); return; }
